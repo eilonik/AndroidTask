@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TaskStripView">
+        <attr name="first_button_image" format="reference" />
+        <attr name="second_button_image" format="reference" />
+        <attr name="third_button_image" format="reference" />
+    </declare-styleable>
+
+</resources>

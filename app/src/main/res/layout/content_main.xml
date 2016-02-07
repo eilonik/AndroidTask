@@ -13,8 +13,12 @@
     tools:showIn="@layout/activity_main">
 
     <com.example.eilon.taskstripview.TaskStripView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/myTask"/>
+        android:layout_height="120dp"
+        android:layout_width="360dp"
+        android:id="@+id/myTask"
+        app:first_button_image="@drawable/testimage"
+        app:second_button_image="@drawable/testimage"
+        app:third_button_image="@drawable/testimage"
+        />
 
 </RelativeLayout>

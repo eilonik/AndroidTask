@@ -31,13 +31,15 @@ public class TaskStripView extends LinearLayout {
         Drawable firstImage = attributes.getDrawable(R.styleable.TaskStripView_first_button_image);
         Drawable secondImage = attributes.getDrawable(R.styleable.TaskStripView_second_button_image);
         Drawable thirdImage = attributes.getDrawable(R.styleable.TaskStripView_third_button_image);
-
+        String firstCaption = attributes.getString(R.styleable.TaskStripView_first_caption);
+        String secondCaption = attributes.getString(R.styleable.TaskStripView_second_caption);
+        String thirdCaption = attributes.getString(R.styleable.TaskStripView_third_caption);
         attributes.recycle();
 
-        // setting task images
-        setImage(firstTask, firstImage);
-        setImage(secondTask, secondImage);
-        setImage(thirdTask, thirdImage);
+        // setting task attributes
+        setTaskAttributes(firstTask, firstImage, firstCaption);
+        setTaskAttributes(secondTask, secondImage, secondCaption);
+        setTaskAttributes(thirdTask, thirdImage, thirdCaption);
 
     }
 
@@ -48,11 +50,15 @@ public class TaskStripView extends LinearLayout {
 
     // Setters
 
-    // Sets the tasks images
-    private void setImage(TaskView task, Drawable image) {
+    // Sets the tasks attributes
+    private void setTaskAttributes(TaskView task, Drawable image, String caption) {
+
         if(image != null) {
             task.setButtonImage(image);
         }
 
+        if(caption != null) {
+            task.setTaskCaption(caption);
+        }
     }
 }

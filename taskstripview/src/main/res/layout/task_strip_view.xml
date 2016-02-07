@@ -13,17 +13,19 @@
         android:layout_weight="1"
         />
 
-    <com.example.eilon.taskstripview.TaskView
+    <com.example.eilon.taskstripview.SecondTaskView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/secondTask"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:visibility="invisible"/>
 
-    <com.example.eilon.taskstripview.TaskView
+    <com.example.eilon.taskstripview.ThirdTaskView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/thirdTask"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:visibility="invisible"/>
 
 </LinearLayout>
 

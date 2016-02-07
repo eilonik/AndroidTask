@@ -5,6 +5,9 @@
         <attr name="first_button_image" format="reference" />
         <attr name="second_button_image" format="reference" />
         <attr name="third_button_image" format="reference" />
+        <attr name="first_caption" format="reference|string"/>
+        <attr name="second_caption" format="reference|string"/>
+        <attr name="third_caption" format="reference|string"/>
     </declare-styleable>
 
 </resources>

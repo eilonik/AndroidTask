@@ -37,10 +37,18 @@ public class TaskView extends LinearLayout {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     /**
      * A method for setting A task image manually
-     * @param Drawable image
+     * @param image
      */
     public void setButtonImage(Drawable image) {
         taskButton.setBackground(image);
         taskButton.setText("");
+    }
+
+    /**
+     * A method setting a task caption
+     * @param caption
+     */
+    public void setTaskCaption(String caption) {
+        taskButton.setText(caption);
     }
 }

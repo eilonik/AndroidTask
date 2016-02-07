@@ -12,6 +12,8 @@
     tools:context="com.example.eilon.androidtask.MainActivity"
     tools:showIn="@layout/activity_main">
 
-
+    <com.example.eilon.taskstripview.TaskView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
 
 </RelativeLayout>

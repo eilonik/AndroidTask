@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 public class TaskStripView extends LinearLayout {
@@ -122,16 +121,16 @@ public class TaskStripView extends LinearLayout {
             this.lastActiveTask = bundle.getInt("activeTask");
             switch (this.lastActiveTask) {
                 case Values.SECOND_TASK:
-                    firstTask.taskComleted(bundle.getLong("firstTaskClick"), true);
+                    firstTask.taskCompleted(bundle.getLong("firstTaskClick"), true);
                     manageTask(Values.SECOND_TASK);
                     break;
 
                 case Values.THIRD_TASK:
-                    firstTask.taskComleted(bundle.getLong("firstTaskClick"), true);
-                    secondTask.taskComleted(bundle.getLong("secondTaskClick"), false);
+                    firstTask.taskCompleted(bundle.getLong("firstTaskClick"), true);
+                    secondTask.taskCompleted(bundle.getLong("secondTaskClick"), false);
                     manageTask(Values.THIRD_TASK);
                     thirdTask.setTaskState(bundle.getInt("thirdTaskState"));
-                    Log.e("STATE", bundle.getInt("thirdTaskState")+"");
+                    thirdTask.enforceCaption(bundle.getInt("thirdTaskState"));
                     break;
             }
             state = bundle.getParcelable("superState");

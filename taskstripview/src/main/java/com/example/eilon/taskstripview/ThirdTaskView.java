@@ -18,6 +18,7 @@ public class ThirdTaskView extends TaskView {
     protected final int STATE_2 = 2;
     protected final int STATE_3 = 3;
 
+
     protected int taskState = STATE_1;
     protected String message = "This is task 3!";
     TextView textView = (TextView)findViewById(R.id.taskCompletionTexs);
@@ -61,7 +62,10 @@ public class ThirdTaskView extends TaskView {
                 break;
 
             case STATE_3:
-                //TODO: What to do here? Where should I send the Intent?
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, message);
+                intent.setType("text/plain");
+                parentTaskStripView.getContext().startActivities(new Intent[]{intent});
                 break;
         }
     }
@@ -74,5 +78,23 @@ public class ThirdTaskView extends TaskView {
     // sets the task state externally
     protected void setTaskState(int state) {
         this.taskState = state;
+    }
+
+    // enforces state caption
+    protected void enforceCaption(int state) {
+        switch(state) {
+            case STATE_1:
+                textView.setText("Share on\nFacebook");
+                break;
+
+            case STATE_2:
+                textView.setText("Share on\nTweeter");
+                break;
+
+            case STATE_3:
+                textView.setText("Send intent");
+                break;
+
+        }
     }
 }

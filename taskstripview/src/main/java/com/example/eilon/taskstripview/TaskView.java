@@ -123,7 +123,7 @@ public class TaskView extends LinearLayout {
 
     // Set task is completed
     // used externally when resuming the view
-    protected void taskComleted(long clickTime, boolean completeText) {
+    protected void taskCompleted(long clickTime, boolean completeText) {
         this.clickTime.setTime(clickTime);
         this.progressBar.setVisibility(View.INVISIBLE);
         if(completeText) {

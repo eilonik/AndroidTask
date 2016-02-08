@@ -16,6 +16,9 @@
         android:layout_height="120dp"
         android:layout_width="360dp"
         android:id="@+id/myTask"
+        app:first_button_image="@drawable/testimage"
+        app:second_button_image="@drawable/testimage"
+        app:third_button_image="@drawable/testimage"
         />
 
 </RelativeLayout>

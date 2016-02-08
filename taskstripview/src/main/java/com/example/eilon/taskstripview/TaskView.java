@@ -3,6 +3,7 @@
  */
 
 package com.example.eilon.taskstripview;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -11,14 +12,17 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import java.util.Date;
 
 
 public class TaskView extends LinearLayout {
 
     protected Button taskButton;
-    protected int taskID = R.integer.first_task;
     protected TaskStripView parentTaskStripView;
+    protected Date clickTime;
+    protected boolean clicked = false;
 
     // Constructors
     public TaskView(Context context) {
@@ -34,7 +38,6 @@ public class TaskView extends LinearLayout {
     public void initialize(Context context) {
         inflate(context, R.layout.view_task, this);
         taskButton = (Button)findViewById(R.id.taskButton);
-        TaskStripView t = (TaskStripView)this.getParent();
 
     }
 
@@ -73,10 +76,37 @@ public class TaskView extends LinearLayout {
         });
     }
 
-    // This method handles the task for each task specifically
+    // This method handles each task specifically
     // To be overridden by subclasses
     protected void handleTask() {
-        parentTaskStripView.manageTask(Values.SECOND_TASK);
+        if(clickTimeCheck()) {
+            ProgressBar progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
+            TextView textView = (TextView)findViewById(R.id.taskCompletionTexs);
+            progressBar.setVisibility(View.INVISIBLE);
+            textView.setVisibility(View.VISIBLE);
+            parentTaskStripView.manageTask(Values.SECOND_TASK);
+        }
+    }
+
+    // Checks if 24 hours have passed since the last click
+    protected boolean clickTimeCheck() {
+        if(clicked) {
+            Date currentTime = new Date();
+            int differenceInHours = (int)((currentTime.getTime() - clickTime.getTime())
+                    / Values.MILLISECONDS_TO_HOURS);
+            if(differenceInHours < 24) {
+                return false;
+            }
+
+            return true;
+        }
+
+        else {
+            clicked = true;
+            clickTime = new Date();
+            return true;
+        }
+
     }
 
 }

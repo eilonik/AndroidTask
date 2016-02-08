@@ -10,8 +10,12 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-
 public class TaskStripView extends LinearLayout {
+
+    TaskView firstTask;
+    SecondTaskView secondTask;
+    ThirdTaskView thirdTask;
+
     public TaskStripView(Context context) {
         super(context);
         initialize(context);
@@ -22,9 +26,9 @@ public class TaskStripView extends LinearLayout {
         initialize(context);
 
         // getting views of each task
-        TaskView firstTask = (TaskView)findViewById(R.id.firstTask);
-        TaskView secondTask = (TaskView)findViewById(R.id.secondTask);
-        TaskView thirdTask = (TaskView)findViewById(R.id.thirdTask);
+        firstTask = (TaskView)findViewById(R.id.firstTask);
+        secondTask = (SecondTaskView)findViewById(R.id.secondTask);
+        thirdTask = (ThirdTaskView)findViewById(R.id.thirdTask);
 
         // retrieving image attributes of the tasks
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.TaskStripView);
@@ -41,24 +45,50 @@ public class TaskStripView extends LinearLayout {
         setTaskAttributes(secondTask, secondImage, secondCaption);
         setTaskAttributes(thirdTask, thirdImage, thirdCaption);
 
+        // starting the first task
+        manageTask(Values.FIRST_TASK);
+
     }
 
     private void initialize(Context context) {
         inflate(context, R.layout.task_strip_view, this);
-
     }
 
-    // Setters
 
-    // Sets the tasks attributes
+    // This method sets the tasks attributes
     private void setTaskAttributes(TaskView task, Drawable image, String caption) {
 
+        // Sets the values of the caption and image for the task
         if(image != null) {
             task.setButtonImage(image);
         }
 
         if(caption != null) {
             task.setTaskCaption(caption);
+        }
+
+        // This method is setting the parent element variable of the task as the instance
+        // of this TaskStripView. used in order to communicate with the tasks manager
+        task.setParent(this);
+
+    }
+
+    // This method manages the exposure of the tasks
+    public void manageTask(int task) {
+
+        switch (task) {
+            case Values.FIRST_TASK:
+                firstTask.start();
+                break;
+
+            case Values.SECOND_TASK:
+                secondTask.start();
+                break;
+
+            case Values.THIRD_TASK:
+                thirdTask.start();
+                break;
+
         }
     }
 }

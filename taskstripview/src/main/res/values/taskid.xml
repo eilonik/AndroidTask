@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="first_task">1</integer>
+    <integer name="second_task">2</integer>
+    <integer name="third_task">3</integer>
+</resources>

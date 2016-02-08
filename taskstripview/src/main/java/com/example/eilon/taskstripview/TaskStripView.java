@@ -7,7 +7,10 @@ package com.example.eilon.taskstripview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 public class TaskStripView extends LinearLayout {
@@ -15,6 +18,7 @@ public class TaskStripView extends LinearLayout {
     TaskView firstTask;
     SecondTaskView secondTask;
     ThirdTaskView thirdTask;
+    private int lastActiveTask = Values.FIRST_TASK;
 
     public TaskStripView(Context context) {
         super(context);
@@ -78,17 +82,60 @@ public class TaskStripView extends LinearLayout {
 
         switch (task) {
             case Values.FIRST_TASK:
+                lastActiveTask = Values.FIRST_TASK;
                 firstTask.start();
                 break;
 
             case Values.SECOND_TASK:
+                lastActiveTask = Values.SECOND_TASK;
                 secondTask.start();
                 break;
 
             case Values.THIRD_TASK:
+                lastActiveTask = Values.THIRD_TASK;
                 thirdTask.start();
                 break;
 
         }
+    }
+
+    // save view state
+    @Override
+    public Parcelable onSaveInstanceState()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("superState", super.onSaveInstanceState());
+        bundle.putInt("activeTask", this.lastActiveTask);
+        bundle.putInt("thirdTaskState", thirdTask.getTaskState());
+        bundle.putLong("firstTaskClick", firstTask.getClickTime());
+        bundle.putLong("secondTaskClick", secondTask.getClickTime());
+        bundle.putLong("thirdTaskClick", thirdTask.getClickTime());
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state)
+    {
+        if (state instanceof Bundle)
+        {
+            Bundle bundle = (Bundle) state;
+            this.lastActiveTask = bundle.getInt("activeTask");
+            switch (this.lastActiveTask) {
+                case Values.SECOND_TASK:
+                    firstTask.taskComleted(bundle.getLong("firstTaskClick"), true);
+                    manageTask(Values.SECOND_TASK);
+                    break;
+
+                case Values.THIRD_TASK:
+                    firstTask.taskComleted(bundle.getLong("firstTaskClick"), true);
+                    secondTask.taskComleted(bundle.getLong("secondTaskClick"), false);
+                    manageTask(Values.THIRD_TASK);
+                    thirdTask.setTaskState(bundle.getInt("thirdTaskState"));
+                    Log.e("STATE", bundle.getInt("thirdTaskState")+"");
+                    break;
+            }
+            state = bundle.getParcelable("superState");
+        }
+        super.onRestoreInstanceState(state);
     }
 }

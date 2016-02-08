@@ -18,7 +18,7 @@ public class ThirdTaskView extends TaskView {
     protected final int STATE_2 = 2;
     protected final int STATE_3 = 3;
 
-    protected int taskState;
+    protected int taskState = STATE_1;
     protected String message = "This is task 3!";
     TextView textView = (TextView)findViewById(R.id.taskCompletionTexs);
     public ThirdTaskView(Context context) {
@@ -27,9 +27,9 @@ public class ThirdTaskView extends TaskView {
 
     public ThirdTaskView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        taskState = STATE_1;
         textView.setText("Share on\nFacebook");
         textView.setVisibility(View.VISIBLE);
+
     }
 
     @Override
@@ -64,5 +64,15 @@ public class ThirdTaskView extends TaskView {
                 //TODO: What to do here? Where should I send the Intent?
                 break;
         }
+    }
+
+    // get the task state
+    protected int getTaskState() {
+        return this.taskState;
+    }
+
+    // sets the task state externally
+    protected void setTaskState(int state) {
+        this.taskState = state;
     }
 }

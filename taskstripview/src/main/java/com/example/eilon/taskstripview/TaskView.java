@@ -8,12 +8,14 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.Date;
 
 
@@ -21,8 +23,11 @@ public class TaskView extends LinearLayout {
 
     protected Button taskButton;
     protected TaskStripView parentTaskStripView;
-    protected Date clickTime;
+    protected Date clickTime = new Date();
     protected boolean clicked = false;
+    ProgressBar progressBar;
+    TextView textView;
+
 
     // Constructors
     public TaskView(Context context) {
@@ -42,6 +47,7 @@ public class TaskView extends LinearLayout {
     }
 
     // Setters
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     /**
      * A method for setting A task image manually
@@ -50,6 +56,8 @@ public class TaskView extends LinearLayout {
     public void setButtonImage(Drawable image) {
         taskButton.setBackground(image);
         taskButton.setText("");
+        progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
+        textView = (TextView)findViewById(R.id.taskCompletionTexs);
     }
 
     /**
@@ -68,6 +76,7 @@ public class TaskView extends LinearLayout {
     // This method starts the task
     public void start() {
         this.setVisibility(View.VISIBLE);
+        setProgressBarTimer(progressBar);
         taskButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,8 +89,7 @@ public class TaskView extends LinearLayout {
     // To be overridden by subclasses
     protected void handleTask() {
         if(clickTimeCheck()) {
-            ProgressBar progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
-            TextView textView = (TextView)findViewById(R.id.taskCompletionTexs);
+
             progressBar.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
             parentTaskStripView.manageTask(Values.SECOND_TASK);
@@ -107,6 +115,54 @@ public class TaskView extends LinearLayout {
             return true;
         }
 
+    }
+
+
+
+
+
+    // Set task is completed
+    // used externally when resuming the view
+    protected void taskComleted(long clickTime, boolean completeText) {
+        this.clickTime.setTime(clickTime);
+        this.progressBar.setVisibility(View.INVISIBLE);
+        if(completeText) {
+            this.textView.setVisibility(View.VISIBLE);
+        }
+        this.start();
+    }
+
+    // Setting a progress bar timer
+    protected void setProgressBarTimer(final ProgressBar progressBar) {
+        CountDownTimer countDownTimer;
+        final int[] timerArray = {0};
+
+        progressBar.setProgress(timerArray[0]);
+        countDownTimer = new CountDownTimer(400,1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                timerArray[0]++;
+                progressBar.setProgress(timerArray[0]);
+
+            }
+
+            @Override
+            public void onFinish() {
+                timerArray[0]++;
+                progressBar.setProgress(timerArray[0]);
+            }
+        };
+        countDownTimer.start();
+
+    }
+
+    // getters
+
+    // get click time
+    protected long getClickTime() {
+        return this.clickTime.getTime();
     }
 
 }

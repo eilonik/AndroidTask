@@ -27,6 +27,7 @@ public class SecondTaskView extends TaskView {
             ProgressBar progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
             progressBar.setVisibility(View.INVISIBLE);
             parentTaskStripView.manageTask(Values.THIRD_TASK);
+            this.setTimer();
         }
 
         else {

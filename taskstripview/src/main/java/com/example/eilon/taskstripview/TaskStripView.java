@@ -102,49 +102,6 @@ public class TaskStripView extends LinearLayout {
     }
 
     // Handle view state
-/*
-    // save view state
-    @Override
-    public Parcelable onSaveInstanceState()
-    {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("superState", super.onSaveInstanceState());
-        bundle.putInt("activeTask", this.lastActiveTask);
-        bundle.putInt("thirdTaskState", thirdTask.getTaskState());
-        bundle.putLong("firstTaskClick", firstTask.getClickTime());
-        bundle.putLong("secondTaskClick", secondTask.getClickTime());
-        bundle.putLong("thirdTaskClick", thirdTask.getClickTime());
-        return bundle;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state)
-    {
-        if (state instanceof Bundle)
-        {
-            Bundle bundle = (Bundle) state;
-            this.lastActiveTask = bundle.getInt("activeTask");
-            switch (this.lastActiveTask) {
-                case Values.SECOND_TASK:
-                    firstTask.taskCompleted(bundle.getLong("firstTaskClick"), true);
-                    manageTask(Values.SECOND_TASK);
-                    break;
-
-                case Values.THIRD_TASK:
-                    firstTask.taskCompleted(bundle.getLong("firstTaskClick"), true);
-                    secondTask.taskCompleted(bundle.getLong("secondTaskClick"), false);
-                    manageTask(Values.THIRD_TASK);
-                    thirdTask.setTaskState(bundle.getInt("thirdTaskState"));
-                    thirdTask.enforceCaption(bundle.getInt("thirdTaskState"));
-                    break;
-            }
-            state = bundle.getParcelable("superState");
-        }
-        super.onRestoreInstanceState(state);
-    }
-
-*/
-    // Code repetition - will be fixed soon
 
     // Retrieving view state when app is restarted
     @Override
@@ -158,7 +115,9 @@ public class TaskStripView extends LinearLayout {
         long secondTaskClickTime = prefs.getLong("second_task_click_time", 0);
 
         switch (lastActiveTask) {
+
             case Values.SECOND_TASK:
+
                 firstTask.taskCompleted(firstTaskClickTime, true);
                 manageTask(Values.SECOND_TASK);
                 break;

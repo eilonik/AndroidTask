@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -25,8 +26,10 @@ public class TaskView extends LinearLayout {
     protected TaskStripView parentTaskStripView;
     protected Date clickTime = new Date();
     protected boolean clicked = false;
+    private boolean disableTextVisability = true;
     ProgressBar progressBar;
     TextView textView;
+
 
 
     // Constructors
@@ -92,8 +95,40 @@ public class TaskView extends LinearLayout {
 
             progressBar.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
+            clicked = true;
             parentTaskStripView.manageTask(Values.SECOND_TASK);
+            setTimer();
+
         }
+    }
+
+    // Set a 24 hours timer
+    protected void setTimer() {
+        long elapsedTime = (new Date().getTime() - getClickTime());
+        CountDownTimer countDownTimer = new CountDownTimer(20 * Values.MILLISECONDS_TO_HOURS
+                - elapsedTime, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.e("seconds remaining:", "" + millisUntilFinished / 1000);
+
+            }
+
+            public void onFinish() {
+                enableTask();
+            }
+
+        };
+        countDownTimer.start();
+    }
+
+    // A method that enables the task
+    protected void enableTask() {
+        if(disableTextVisability) {
+            this.textView.setVisibility(View.INVISIBLE);
+        }
+        this.progressBar.setVisibility(View.VISIBLE);
+        this.clickTime = new Date();
+        this.clicked = false;
     }
 
     // Checks if 24 hours have passed since the last click
@@ -118,14 +153,12 @@ public class TaskView extends LinearLayout {
     }
 
 
-
-
-
     // Set task is completed
     // used externally when resuming the view
     protected void taskCompleted(long clickTime, boolean completeText) {
         this.clickTime.setTime(clickTime);
         this.progressBar.setVisibility(View.INVISIBLE);
+        this.disableTextVisability = completeText;
         if(completeText) {
             this.textView.setVisibility(View.VISIBLE);
         }

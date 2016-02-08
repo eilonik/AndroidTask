@@ -21,4 +21,16 @@
         app:third_button_image="@drawable/testimage"
         />
 
+    <com.example.eilon.taskstripview.TaskStripView
+        android:layout_height="120dp"
+        android:layout_width="360dp"
+        android:id="@+id/myTask2"
+        app:first_button_image="@drawable/testimage"
+        app:second_button_image="@drawable/testimage"
+        app:third_button_image="@drawable/testimage"
+        android:layout_below="@+id/myTask"
+        />
+
+
+
 </RelativeLayout>

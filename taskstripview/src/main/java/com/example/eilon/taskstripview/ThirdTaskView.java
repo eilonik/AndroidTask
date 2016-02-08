@@ -81,6 +81,7 @@ public class ThirdTaskView extends TaskView {
     }
 
     // enforces state caption
+    // in case of resume
     protected void enforceCaption(int state) {
         switch(state) {
             case STATE_1:

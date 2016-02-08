@@ -5,10 +5,10 @@
 package com.example.eilon.taskstripview;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -28,6 +28,7 @@ public class TaskStripView extends LinearLayout {
         super(context, attrs);
         initialize(context);
 
+
         // getting views of each task
         firstTask = (TaskView)findViewById(R.id.firstTask);
         secondTask = (SecondTaskView)findViewById(R.id.secondTask);
@@ -41,6 +42,7 @@ public class TaskStripView extends LinearLayout {
         String firstCaption = attributes.getString(R.styleable.TaskStripView_first_caption);
         String secondCaption = attributes.getString(R.styleable.TaskStripView_second_caption);
         String thirdCaption = attributes.getString(R.styleable.TaskStripView_third_caption);
+
         attributes.recycle();
 
         // setting task attributes
@@ -55,6 +57,7 @@ public class TaskStripView extends LinearLayout {
 
     private void initialize(Context context) {
         inflate(context, R.layout.task_strip_view, this);
+        Resources res = getResources();
     }
 
 
@@ -98,6 +101,8 @@ public class TaskStripView extends LinearLayout {
         }
     }
 
+    // Handle view state
+/*
     // save view state
     @Override
     public Parcelable onSaveInstanceState()
@@ -137,4 +142,51 @@ public class TaskStripView extends LinearLayout {
         }
         super.onRestoreInstanceState(state);
     }
+
+*/
+    // Code repetition - will be fixed soon
+
+    // Retrieving view state when app is restarted
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        SharedPreferences prefs = getContext().getSharedPreferences("TASK_STRIP_VIEW" + this.getId(),
+                Context.MODE_PRIVATE);
+        int lastActiveTask = prefs.getInt("last_active_task", 1);
+        int thirdTaskState = prefs.getInt("third_task_state", 1);
+        long firstTaskClickTime = prefs.getLong("first_task_click_time", 0);
+        long secondTaskClickTime = prefs.getLong("second_task_click_time", 0);
+
+        switch (lastActiveTask) {
+            case Values.SECOND_TASK:
+                firstTask.taskCompleted(firstTaskClickTime, true);
+                manageTask(Values.SECOND_TASK);
+                break;
+
+            case Values.THIRD_TASK:
+                firstTask.taskCompleted(firstTaskClickTime, true);
+                secondTask.taskCompleted(secondTaskClickTime, false);
+                manageTask(Values.THIRD_TASK);
+                thirdTask.setTaskState(thirdTaskState);
+                thirdTask.enforceCaption(thirdTaskState);
+                break;
+        }
+    }
+
+
+    // Saving view state when app is closed
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        SharedPreferences.Editor editor = this.getContext().getSharedPreferences("TASK_STRIP_VIEW"
+                        + this.getId(), Context.MODE_PRIVATE).edit();
+        editor.putInt("last_active_task", lastActiveTask);
+        editor.putLong("first_task_click_time", firstTask.getClickTime());
+        editor.putLong("second_task_click_time", secondTask.getClickTime());
+        editor.putInt("third_task_state", thirdTask.getTaskState());
+        editor.apply();
+    }
+
+
+
 }

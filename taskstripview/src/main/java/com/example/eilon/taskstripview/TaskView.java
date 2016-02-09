@@ -151,7 +151,7 @@ public class TaskView extends LinearLayout {
             Date currentTime = new Date();
             int differenceInHours = (int)((currentTime.getTime() - clickTime.getTime())
                     / Values.MILLISECONDS_TO_HOURS);
-            if(differenceInHours < 24) {
+            if(differenceInHours < Values.PAUSE_HOURS) {
                 return false;
             }
 
@@ -159,8 +159,7 @@ public class TaskView extends LinearLayout {
         }
 
         else {
-            //clicked = true;
-            //clickTime = new Date();
+
             return true;
         }
 

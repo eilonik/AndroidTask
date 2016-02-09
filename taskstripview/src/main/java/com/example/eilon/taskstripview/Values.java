@@ -11,5 +11,4 @@ public class Values {
     public final static int PAUSE_HOURS = 24;
     public static boolean RESTART_FIRST_TIMER = false;
     public static boolean RESTART_SECOND_TIMER = false;
-    public static boolean APP_RESTARTED = true;
 }

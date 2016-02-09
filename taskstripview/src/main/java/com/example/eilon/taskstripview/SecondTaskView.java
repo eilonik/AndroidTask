@@ -23,11 +23,13 @@ public class SecondTaskView extends TaskView {
 
     @Override
     protected void handleTask() {
-        if(clickTimeCheck()) {
+        this.clicked = true;
+        if(clickTimeCheck() || !timerOn) {
             ProgressBar progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
             progressBar.setVisibility(View.INVISIBLE);
             parentTaskStripView.manageTask(Values.THIRD_TASK);
-            this.setTimer();
+            setTimer();
+
         }
 
         else {

@@ -35,6 +35,7 @@ public class ThirdTaskView extends TaskView {
 
     @Override
     protected void handleTask() {
+
         switch (taskState) {
 
             case STATE_1:

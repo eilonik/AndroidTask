@@ -6,7 +6,6 @@ package com.example.eilon.taskstripview;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -57,7 +56,6 @@ public class TaskStripView extends LinearLayout {
 
     private void initialize(Context context) {
         inflate(context, R.layout.task_strip_view, this);
-        Resources res = getResources();
     }
 
 
@@ -79,7 +77,7 @@ public class TaskStripView extends LinearLayout {
 
     }
 
-    // This method manages the exposure of the tasks
+    // This method manages the activation and exposure of the tasks
     public void manageTask(int task) {
 
         switch (task) {
@@ -101,9 +99,8 @@ public class TaskStripView extends LinearLayout {
         }
     }
 
-    // Handle view state
 
-    // Retrieving view state when app is restarted
+    // Retrieving view state from shared preferences when app is restarted
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -111,25 +108,55 @@ public class TaskStripView extends LinearLayout {
                 Context.MODE_PRIVATE);
         int lastActiveTask = prefs.getInt("last_active_task", 1);
         int thirdTaskState = prefs.getInt("third_task_state", 1);
+
+        // Values for determining whether a new timeer is needed for the task
         long firstTaskClickTime = prefs.getLong("first_task_click_time", 0);
         long secondTaskClickTime = prefs.getLong("second_task_click_time", 0);
+        Values.RESTART_FIRST_TIMER = prefs.getBoolean("RESTART_FIRST_TIMER", false);
+        Values.RESTART_SECOND_TIMER = prefs.getBoolean("RESTART_SECOND_TIMER", false);
+
 
         switch (lastActiveTask) {
 
             case Values.SECOND_TASK:
 
                 firstTask.taskCompleted(firstTaskClickTime, true);
+                if (Values.RESTART_FIRST_TIMER) {
+                    Values.RESTART_FIRST_TIMER = false;
+                    firstTask.setTimer();
+                }
+                else if(firstTask.clickTimeCheck()) {
+                    firstTask.enableTask();
+                }
                 manageTask(Values.SECOND_TASK);
                 break;
 
             case Values.THIRD_TASK:
                 firstTask.taskCompleted(firstTaskClickTime, true);
                 secondTask.taskCompleted(secondTaskClickTime, false);
+                if (Values.RESTART_FIRST_TIMER) {
+                    Values.RESTART_FIRST_TIMER = false;
+                    firstTask.setTimer();
+                }
+
+                else if(firstTask.clickTimeCheck()) {
+                    firstTask.enableTask();
+                }
+
+                if (Values.RESTART_SECOND_TIMER) {
+                    Values.RESTART_SECOND_TIMER = false;
+                    secondTask.setTimer();
+                }
+
+                else if(secondTask.clickTimeCheck()) {
+                    secondTask.enableTask();
+                }
                 manageTask(Values.THIRD_TASK);
                 thirdTask.setTaskState(thirdTaskState);
                 thirdTask.enforceCaption(thirdTaskState);
                 break;
         }
+
     }
 
 
@@ -143,9 +170,17 @@ public class TaskStripView extends LinearLayout {
         editor.putLong("first_task_click_time", firstTask.getClickTime());
         editor.putLong("second_task_click_time", secondTask.getClickTime());
         editor.putInt("third_task_state", thirdTask.getTaskState());
+        if(firstTask.isTimerOn()) {
+            editor.putBoolean("RESTART_FIRST_TIMER", true);
+            firstTask.killTimer();
+        }
+
+        if(secondTask.isTimerOn()) {
+            editor.putBoolean("RESTART_SECOND_TIMER", true);
+            secondTask.killTimer();
+        }
+
         editor.apply();
     }
-
-
 
 }

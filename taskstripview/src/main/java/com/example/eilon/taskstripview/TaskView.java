@@ -114,7 +114,7 @@ public class TaskView extends LinearLayout {
         long elapsedTime = (new Date().getTime() - getClickTime());
         timerOn = true;
         CountDownTimer countDownTimer = new CountDownTimer(Values.PAUSE_HOURS * Values.MILLISECONDS_TO_HOURS
-                - elapsedTime - elapsedTime, 1000) {
+                - elapsedTime , 1000) {
 
 
             public void onTick(long millisUntilFinished) {

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,10 +18,15 @@ public class ThirdTaskView extends TaskView {
     protected final int STATE_1 = 1;
     protected final int STATE_2 = 2;
     protected final int STATE_3 = 3;
-
+    protected final String FACEBOOK_PACKAGE = "com.facebook.katana";
+    protected final String TWITTER_PACKAGE = "com.twitter.android";
+    protected final String TWITTER_SHARE_ACTIVITY = "com.twitter.android.composer.ComposerActivity";
+    protected final String FACEBOOK_SHARE_URL = "http://m.facebook.com/sharer.php?u=";
+    protected final String TWITTER_SHARE_URL = "https://twitter.com/intent/tweet?text=";
+    protected final String FACEBOOK_URL = "www.facebook.com";
+    protected final String SHARE_MESSAGE = "This is task 3!";
 
     protected int taskState = STATE_1;
-    protected String message = "This is task 3!";
     TextView textView = (TextView)findViewById(R.id.taskCompletionTexs);
     public ThirdTaskView(Context context) {
         super(context);
@@ -48,12 +52,14 @@ public class ThirdTaskView extends TaskView {
 
 
                 // Sharing on Facebook
-                if(isPackageInstalled("com.facebook.katana", parentTaskStripView.getContext())) {
-                    //TODO
+                if(isPackageInstalled(FACEBOOK_PACKAGE, parentTaskStripView.getContext())) {
+
+                    shareStatusOnApp(FACEBOOK_PACKAGE, "", FACEBOOK_URL,
+                            Intent.ACTION_SEND, "text/plain");
                 }
 
                 else {
-                    shareStatusOnWeb("http://m.facebook.com/sharer.php?u=" + Uri.encode(message));
+                    shareStatusOnWeb(FACEBOOK_SHARE_URL + FACEBOOK_URL);
                 }
 
                 break;
@@ -63,22 +69,23 @@ public class ThirdTaskView extends TaskView {
                 textView.setText("Send intent");
 
                 // Sharing on tweeter
-                if(isPackageInstalled("com.twitter.android", parentTaskStripView.getContext()))
+                if(isPackageInstalled(TWITTER_PACKAGE, parentTaskStripView.getContext()))
                 {
-                    shareStatusOnApp("com.twitter.android",
-                            "com.twitter.android.composer.ComposerActivity", message);
+                    shareStatusOnApp(TWITTER_PACKAGE,
+                            TWITTER_SHARE_ACTIVITY, SHARE_MESSAGE,
+                            Intent.ACTION_VIEW, "text/*");
 
                 }
                 else
                 {
-                    shareStatusOnWeb("https://twitter.com/intent/tweet?text=" + message);
+                    shareStatusOnWeb(TWITTER_SHARE_URL + SHARE_MESSAGE);
                 }
 
                 break;
 
             case STATE_3:
                 Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, message);
+                intent.putExtra(Intent.EXTRA_TEXT, SHARE_MESSAGE);
                 intent.setType("text/plain");
                 parentTaskStripView.getContext().startActivities(new Intent[]{intent});
                 break;
@@ -120,30 +127,25 @@ public class ThirdTaskView extends TaskView {
         PackageManager pm = context.getPackageManager();
         try {
             pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
-            Log.e("TWITTER","INSTALLED");
             return true;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("TWITTER","NOT INSTALLED");
             return false;
         }
     }
 
     // This method shares a status on a specified app
-    protected void shareStatusOnApp(String packageName, String className, String message) {
-        Intent status;
+    protected void shareStatusOnApp(String packageName, String className, String message,
+                                    String action, String contentType) {
+        Intent status = new Intent(action);
 
         if(className == "") {
-            status = new Intent(Intent.ACTION_SEND);
             status.setPackage(packageName);
-            status.putExtra(Intent.EXTRA_SUBJECT, message);
-            status.setType("text/plain");
         }
         else {
-            status = new Intent(Intent.ACTION_VIEW);
             status.setClassName(packageName, className);
-            status.setType("text/*");
         }
-        Log.e("MSG", message);
+
+        status.setType(contentType);
         status.putExtra(android.content.Intent.EXTRA_TEXT, message);
         parentTaskStripView.getContext().startActivities(new Intent[]{status});
     }

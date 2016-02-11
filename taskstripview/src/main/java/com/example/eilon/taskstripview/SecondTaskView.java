@@ -8,8 +8,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ProgressBar;
 
 public class SecondTaskView extends TaskView {
     public SecondTaskView(Context context) {
@@ -18,18 +16,15 @@ public class SecondTaskView extends TaskView {
 
     public SecondTaskView(Context context, AttributeSet attrs)
     {
+
         super(context, attrs);
+        disableTextVisability = false;
     }
 
     @Override
     protected void handleTask() {
-        this.clicked = true;
-        if(clickTimeCheck() || !timerOn) {
-            ProgressBar progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
-            progressBar.setVisibility(View.INVISIBLE);
-            parentTaskStripView.manageTask(Values.THIRD_TASK);
-            setTimer();
-
+        if(!clicked || clickTimeCheck()) {
+            super.handleTask();
         }
 
         else {

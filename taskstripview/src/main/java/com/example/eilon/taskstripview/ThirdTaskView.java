@@ -84,6 +84,7 @@ public class ThirdTaskView extends TaskView {
                 break;
 
             case STATE_3:
+
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_TEXT, SHARE_MESSAGE);
                 intent.setType("text/plain");
@@ -93,13 +94,16 @@ public class ThirdTaskView extends TaskView {
     }
 
     // get the task state
-    protected int getTaskState() {
-        return this.taskState;
+    @Override
+    protected long getTaskState() {
+        return (long)this.taskState;
     }
 
     // sets the task state externally
-    protected void setTaskState(int state) {
-        this.taskState = state;
+    @Override
+    protected void setState(long state) {
+        this.taskState = (int)state;
+        enforceCaption((int)state);
     }
 
     // enforces state caption

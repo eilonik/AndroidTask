@@ -26,10 +26,7 @@ public class TaskView extends LinearLayout {
     protected TaskStripView parentTaskStripView;
     protected Date clickTime = new Date();
     protected boolean clicked = false;
-    private boolean disableTextVisability = true;
-    protected boolean timerOn = false;
-    protected CountDownTimer timer;
-    protected boolean completed = false;
+    protected boolean disableTextVisability = true;
     ProgressBar progressBar;
     TextView textView;
 
@@ -81,13 +78,11 @@ public class TaskView extends LinearLayout {
 
     // This method starts the task
     public void start() {
-        this.setVisibility(View.VISIBLE);
         setProgressBarTimer(progressBar);
         taskButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!clicked){
-                    clicked = true;
                     clickTime = new Date();
                 }
                 handleTask();
@@ -98,84 +93,39 @@ public class TaskView extends LinearLayout {
     // This method handles each task specifically
     // To be overridden by subclasses
     protected void handleTask() {
-        if(clickTimeCheck() || !isTimerOn()) {
+        if(!clicked || clickTimeCheck()) {
+            clicked = true;
             progressBar.setVisibility(View.INVISIBLE);
-            textView.setVisibility(View.VISIBLE);
-            //clicked = true;
-            parentTaskStripView.manageTask(Values.SECOND_TASK);
-            setTimer();
-
+            textView.setVisibility( (disableTextVisability) ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
-    // Set a 24 hours timer
-    protected void setTimer() {
-
-        long elapsedTime = (new Date().getTime() - getClickTime());
-        timerOn = true;
-        CountDownTimer countDownTimer = new CountDownTimer(Values.PAUSE_HOURS * Values.MILLISECONDS_TO_HOURS
-                - elapsedTime , 1000) {
-
-
-            public void onTick(long millisUntilFinished) {
-                Log.e("seconds remaining:", "" + millisUntilFinished / 1000);
-
-            }
-
-            public void onFinish() {
-                timerOn = false;
-                enableTask();
-            }
-
-        };
-        this.timer = countDownTimer;
-        countDownTimer.start();
-
-    }
-
-    // A method that enables the task
-    protected void enableTask() {
-        completed = false;
-        if(disableTextVisability) {
-            this.textView.setVisibility(View.INVISIBLE);
-        }
-        this.progressBar.setVisibility(View.VISIBLE);
-        this.clickTime = new Date();
-        this.clicked = false;
-        this.start();
-    }
 
     // Checks if 24 hours have passed since the last click
     protected boolean clickTimeCheck() {
-        if(clicked) {
-            Date currentTime = new Date();
-            int differenceInHours = (int)((currentTime.getTime() - clickTime.getTime())
-                    / Values.MILLISECONDS_TO_HOURS);
-            if(differenceInHours < Values.PAUSE_HOURS) {
-                return false;
-            }
 
-            return true;
+        Date currentTime = new Date();
+        int differenceInHours = (int)((currentTime.getTime() - clickTime.getTime())
+                / Values.MILLISECONDS_TO_HOURS);
+        if(differenceInHours < /*Values.PAUSE_HOURS*/10000) {
+            Log.e("HERE","FALSE");
+            return false;
         }
-
-        else {
-
-            return true;
-        }
+        Log.e("HERE","TRUE");
+        return true;
 
     }
 
 
     // Set task is completed
-    // used externally when resuming the view
-    protected void taskCompleted(long clickTime, boolean completeText) {
-        this.clickTime.setTime(clickTime);
-        this.progressBar.setVisibility(View.INVISIBLE);
-        this.disableTextVisability = completeText;
-        if(completeText) {
-            this.textView.setVisibility(View.VISIBLE);
-        }
-        this.start();
+    // In case 24 hours haven't passed
+    protected void taskCompleted() {
+        progressBar.setVisibility(View.INVISIBLE);
+        clicked = true;
+        this.textView.setVisibility( (disableTextVisability) ? View.VISIBLE : View.INVISIBLE);
+
+
+        start();
     }
 
     // Setting a progress bar timer
@@ -206,21 +156,26 @@ public class TaskView extends LinearLayout {
 
     // getters
 
-    // get click time
-    protected long getClickTime() {
+    // get the task state when view is dispatched
+    protected long getTaskState() {
+        if(!clicked) {
+            return 0;
+        }
+
         return this.clickTime.getTime();
     }
 
-    // check timer state
-    protected boolean isTimerOn() {
-        return timerOn;
-    }
 
-    // cancels the current timer
-    protected void killTimer() {
-        this.timer.cancel();
-        this.timer = null;
-        timerOn = false;
+    // this method sets the task state when the view resumes
+    protected void setState(long state) {
+        this.clickTime.setTime(state);
+        if(clickTimeCheck()) {
+            start();
+        }
+
+        else {
+            taskCompleted();
+        }
     }
 
 }

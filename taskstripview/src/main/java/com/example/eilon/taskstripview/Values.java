@@ -9,4 +9,5 @@ public class Values {
     public final static int THIRD_TASK = 2;
     public final static int MILLISECONDS_TO_HOURS = (60*60*1000);
     public final static int PAUSE_HOURS = 24;
+    public final static int NUM_OF_ATTRIBUTES = 3;
 }

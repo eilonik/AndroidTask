@@ -34,7 +34,7 @@ public class SecondTaskView extends TaskView {
                     .setMessage("please try again tomorrow")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
+
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)

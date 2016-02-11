@@ -31,7 +31,4 @@
         app:third_button_image="@drawable/testimage"
         />
 
-
-
-
 </RelativeLayout>

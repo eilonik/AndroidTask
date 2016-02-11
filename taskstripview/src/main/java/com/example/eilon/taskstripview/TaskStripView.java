@@ -17,6 +17,7 @@ public class TaskStripView extends LinearLayout {
     SecondTaskView secondTask;
     ThirdTaskView thirdTask;
     TaskView tasks[] = {firstTask, secondTask, thirdTask};
+    AttributeSet attrs;
 
     public TaskStripView(Context context) {
         super(context);
@@ -26,6 +27,7 @@ public class TaskStripView extends LinearLayout {
     public TaskStripView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
+        this.attrs = attrs;
 
 
         // getting views of each task
@@ -33,33 +35,20 @@ public class TaskStripView extends LinearLayout {
         tasks[Values.SECOND_TASK] = (SecondTaskView)findViewById(R.id.secondTask);
         tasks[Values.THIRD_TASK] = (ThirdTaskView)findViewById(R.id.thirdTask);
 
-        // retrieving image attributes of the tasks
-        //TODO:iterate over attributes array
+        // retrieving image attributes of the tasks and initiating tasks
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.TaskStripView);
-        Drawable firstImage = attributes.getDrawable(R.styleable.TaskStripView_first_button_image);
-        Drawable secondImage = attributes.getDrawable(R.styleable.TaskStripView_second_button_image);
-        Drawable thirdImage = attributes.getDrawable(R.styleable.TaskStripView_third_button_image);
-        String firstCaption = attributes.getString(R.styleable.TaskStripView_first_caption);
-        String secondCaption = attributes.getString(R.styleable.TaskStripView_second_caption);
-        String thirdCaption = attributes.getString(R.styleable.TaskStripView_third_caption);
+        initiateTasks(attributes);
 
         attributes.recycle();
-
-        // setting task attributes
-        setTaskAttributes(tasks[Values.FIRST_TASK], firstImage, firstCaption);
-        setTaskAttributes(tasks[Values.SECOND_TASK], secondImage, secondCaption);
-        setTaskAttributes(tasks[Values.THIRD_TASK], thirdImage, thirdCaption);
-
-        // initiating tasks
-        initiateTasks();
-
 
     }
 
     // Initiates all existig tasks
-    protected void initiateTasks() {
-        for(TaskView task : tasks) {
-            task.start();
+    protected void initiateTasks(TypedArray attributes) {
+        for(int task = Values.FIRST_TASK; task < tasks.length; task++) {
+            setTaskAttributes(tasks[task], attributes.getDrawable(task),
+                    attributes.getString(task + Values.NUM_OF_ATTRIBUTES));
+            tasks[task].start();
         }
     }
 
@@ -94,7 +83,8 @@ public class TaskStripView extends LinearLayout {
         SharedPreferences prefs = getContext().getSharedPreferences("TASK_STRIP_VIEW" + this.getId(),
                 Context.MODE_PRIVATE);
 
-        initiateTasks();
+        initiateTasks(getContext().obtainStyledAttributes(attrs, R.styleable.TaskStripView));
+
         for(int i = 0; i < tasks.length; i++) {
             long taskState = prefs.getLong("task_state" + i, 1);
             tasks[i].setState(taskState);
@@ -108,8 +98,8 @@ public class TaskStripView extends LinearLayout {
         super.onDetachedFromWindow();
         SharedPreferences.Editor editor = this.getContext().getSharedPreferences("TASK_STRIP_VIEW"
                 + this.getId(), Context.MODE_PRIVATE).edit();
-        //editor.putInt("last_active_task", lastActiveTask);
-        for(int i = 0; i < tasks.length; i++) {
+
+        for(int i = Values.FIRST_TASK; i < tasks.length; i++) {
             editor.putLong("task_state" + i, tasks[i].getTaskState());
         }
 

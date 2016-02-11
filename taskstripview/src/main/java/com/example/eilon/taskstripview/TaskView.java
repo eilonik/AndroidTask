@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -82,7 +81,7 @@ public class TaskView extends LinearLayout {
         taskButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!clicked){
+                if (!clicked) {
                     clickTime = new Date();
                 }
                 handleTask();
@@ -107,11 +106,9 @@ public class TaskView extends LinearLayout {
         Date currentTime = new Date();
         int differenceInHours = (int)((currentTime.getTime() - clickTime.getTime())
                 / Values.MILLISECONDS_TO_HOURS);
-        if(differenceInHours < /*Values.PAUSE_HOURS*/10000) {
-            Log.e("HERE","FALSE");
+        if(differenceInHours < Values.PAUSE_HOURS) {
             return false;
         }
-        Log.e("HERE","TRUE");
         return true;
 
     }
@@ -134,7 +131,7 @@ public class TaskView extends LinearLayout {
         final int[] timerArray = {0};
 
         progressBar.setProgress(timerArray[0]);
-        countDownTimer = new CountDownTimer(400,1000) {
+        countDownTimer = new CountDownTimer(5000,1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -154,18 +151,6 @@ public class TaskView extends LinearLayout {
 
     }
 
-    // getters
-
-    // get the task state when view is dispatched
-    protected long getTaskState() {
-        if(!clicked) {
-            return 0;
-        }
-
-        return this.clickTime.getTime();
-    }
-
-
     // this method sets the task state when the view resumes
     protected void setState(long state) {
         this.clickTime.setTime(state);
@@ -178,4 +163,14 @@ public class TaskView extends LinearLayout {
         }
     }
 
+
+    // getters
+
+    // get the task state when view is dispatched
+    protected long getTaskState() {
+        if(!clicked) {
+            return 0;
+        }
+        return this.clickTime.getTime();
+    }
 }

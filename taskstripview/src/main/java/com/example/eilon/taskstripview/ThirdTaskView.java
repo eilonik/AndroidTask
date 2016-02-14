@@ -123,7 +123,7 @@ public class ThirdTaskView extends TaskView {
                 break;
 
             case STATE_2:
-                textView.setText("Share on\nTweeter");
+                textView.setText("Share on\nTwitter");
                 break;
 
             case STATE_3:

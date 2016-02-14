@@ -45,7 +45,8 @@ public class TaskView extends LinearLayout {
     public void initialize(Context context) {
         inflate(context, R.layout.view_task, this);
         taskButton = (Button)findViewById(R.id.taskButton);
-
+        progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
+        textView = (TextView)findViewById(R.id.taskCompletionTexs);
     }
 
     // Setters
@@ -58,8 +59,6 @@ public class TaskView extends LinearLayout {
     public void setButtonImage(Drawable image) {
         taskButton.setBackground(image);
         taskButton.setText("");
-        progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
-        textView = (TextView)findViewById(R.id.taskCompletionTexs);
     }
 
     /**

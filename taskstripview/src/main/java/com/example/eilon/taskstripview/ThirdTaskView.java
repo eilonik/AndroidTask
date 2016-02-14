@@ -34,8 +34,9 @@ public class ThirdTaskView extends TaskView {
 
     public ThirdTaskView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        textView.setText("Share on\nFacebook");
         textView.setVisibility(View.VISIBLE);
+        enforceCaption(taskState);
+        enforceImage(taskState);
 
     }
 
@@ -46,7 +47,6 @@ public class ThirdTaskView extends TaskView {
 
             case STATE_1:
                 taskState = STATE_2;
-                textView.setText("Share on\nTweeter");
                 ProgressBar progressBar = (ProgressBar)findViewById(R.id.taskProgressBar);
                 progressBar.setVisibility(View.INVISIBLE);
 
@@ -91,6 +91,10 @@ public class ThirdTaskView extends TaskView {
                 parentTaskStripView.getContext().startActivities(new Intent[]{intent});
                 break;
         }
+
+        // Setting image and caption after click handle
+        enforceCaption(taskState);
+        enforceImage(taskState);
     }
 
     // get the task state
@@ -102,13 +106,17 @@ public class ThirdTaskView extends TaskView {
     // sets the task state externally
     @Override
     protected void setState(long state) {
-        this.taskState = (int)state;
-        enforceCaption((int)state);
+        int newState = (int)state;
+        this.taskState = newState;
+        enforceCaption(newState);
+        enforceImage(newState);
+
     }
 
     // enforces state caption
     // in case of resume
     protected void enforceCaption(int state) {
+
         switch(state) {
             case STATE_1:
                 textView.setText("Share on\nFacebook");
@@ -119,7 +127,29 @@ public class ThirdTaskView extends TaskView {
                 break;
 
             case STATE_3:
-                textView.setText("Send intent");
+                textView.setText("Invite friends");
+                break;
+
+        }
+    }
+
+    // enforces state image
+    // in case of resume
+    protected void enforceImage(int state) {
+
+        switch(state) {
+            case STATE_1:
+                setButtonImage(getResources().getDrawable(R.mipmap.facebook_icon));
+                break;
+
+            case STATE_2:
+                setButtonImage(getResources().getDrawable(R.mipmap.twitter_icon));
+                progressBar.setVisibility(View.INVISIBLE);
+                break;
+
+            case STATE_3:
+                setButtonImage(getResources().getDrawable(R.mipmap.intent_icon));
+                progressBar.setVisibility(View.INVISIBLE);
                 break;
 
         }

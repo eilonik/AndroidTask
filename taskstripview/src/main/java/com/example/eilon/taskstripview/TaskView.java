@@ -94,9 +94,9 @@ public class TaskView extends LinearLayout {
     protected void handleTask() {
         if(!clicked || clickTimeCheck()) {
             clicked = true;
-            progressBar.setVisibility(View.INVISIBLE);
-            textView.setVisibility( (disableTextVisability) ? View.VISIBLE : View.INVISIBLE);
+            taskCompleted();
         }
+
     }
 
 
@@ -120,7 +120,8 @@ public class TaskView extends LinearLayout {
         progressBar.setVisibility(View.INVISIBLE);
         clicked = true;
         this.textView.setVisibility( (disableTextVisability) ? View.VISIBLE : View.INVISIBLE);
-
+        parentTaskStripView.setTaskAttributes(this, getResources()
+                .getDrawable(R.mipmap.task_complete_image), "");
 
         start();
     }
@@ -131,7 +132,7 @@ public class TaskView extends LinearLayout {
         final int[] timerArray = {0};
 
         progressBar.setProgress(timerArray[0]);
-        countDownTimer = new CountDownTimer(5000,1000) {
+        countDownTimer = new CountDownTimer(400,10) {
 
             @Override
             public void onTick(long millisUntilFinished) {

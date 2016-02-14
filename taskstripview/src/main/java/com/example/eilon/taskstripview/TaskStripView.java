@@ -58,7 +58,7 @@ public class TaskStripView extends LinearLayout {
 
 
     // This method sets the tasks attributes
-    private void setTaskAttributes(TaskView task, Drawable image, String caption) {
+    protected void setTaskAttributes(TaskView task, Drawable image, String caption) {
 
         // Sets the values of the caption and image for the task
         if(image != null) {

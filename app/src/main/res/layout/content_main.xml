@@ -16,19 +16,9 @@
         android:layout_height="120dp"
         android:layout_width="360dp"
         android:id="@+id/myTask"
-        app:first_button_image="@drawable/testimage"
-        app:second_button_image="@drawable/testimage"
-        app:third_button_image="@drawable/testimage"
-        />
+        app:first_button_image="@mipmap/first_task"
+        app:second_button_image="@mipmap/second_task"
 
-    <com.example.eilon.taskstripview.TaskStripView
-        android:layout_height="120dp"
-        android:layout_width="360dp"
-        android:id="@+id/myTask2"
-        android:layout_below="@+id/myTask"
-        app:first_button_image="@drawable/testimage"
-        app:second_button_image="@drawable/testimage"
-        app:third_button_image="@drawable/testimage"
         />
 
 </RelativeLayout>
